@@ -58,6 +58,6 @@ void main()
 {
 	//Line();
 	//Circle();
-	Parabloa();
-	//Basic();
+	//Parabloa();
+	Basic();
 }
