@@ -11,10 +11,7 @@ C:\Users\user\OneDrive - 한국산업기술대학교\바탕 화면\셰이더\셰
 C:\Users\user\OneDrive - 한국산업기술대학교\바탕 화면\셰이더\셰이더\GLSL_study\셰이더\SimpleGame\Renderer.cpp(441,28): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
   (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
   
-C:\Users\user\OneDrive - 한국산업기술대학교\바탕 화면\셰이더\셰이더\GLSL_study\셰이더\SimpleGame\Renderer.cpp(506,25): warning C4244: '인수': 'GLuint'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\OneDrive - 한국산업기술대학교\바탕 화면\셰이더\셰이더\GLSL_study\셰이더\SimpleGame\Renderer.cpp(507,24): warning C4244: '+=': 'double'에서 'GLuint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\OneDrive - 한국산업기술대학교\바탕 화면\셰이더\셰이더\GLSL_study\셰이더\SimpleGame\Renderer.cpp(507,29): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
   (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
   
   SimpleGame.cpp
