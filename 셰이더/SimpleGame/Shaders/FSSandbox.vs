@@ -8,5 +8,5 @@ void main()
 {
 	vec4 newPosition = vec4(a_Position, 1);
 	gl_Position = newPosition;
-	v_Color = vec4(newPosition.x+0.5, newPosition.y+0.5, 0, 1);
+	v_Color = vec4(newPosition.x+0.5, newPosition.y+0.5, 0, 1); //출력값이 x는 0~1, y는 0~1
 }

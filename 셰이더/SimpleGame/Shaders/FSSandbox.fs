@@ -53,8 +53,28 @@ void Circles()
 	FragColor = vec4(sinValue);
 }
 
+void SinGraph()
+{
+	vec2 newTexPos = vec2(v_Color.r * 2 * c_PI, v_Color.g * 2 -1);
+	float period = 3; //주기
+	float amp = 0.2;
+	float speed = 5;
+	//float sinValue = amp*sin(newTexPos.x * period - u_Time*speed) - amp*sin(- u_Time*speed); //x에 연속적인 값(u_Time)을 넣으면 움직임 , 빼주면 방향 바뀜, *2하면 주기바뀜
+	float sinValue = v_Color.r*amp*sin(newTexPos.x * period - u_Time*speed);
+	float width = 0.5;
+	width = width * (1-v_Color.r); //깃발 끝부분 작아지게
+	if(sinValue < newTexPos.y + width && sinValue > newTexPos.y - width)
+	{
+		FragColor = vec4((sinValue + 1)/2); //음영 -> 값을 빼주면 됨
+	}
+	else{
+		FragColor = vec4(0);
+	}
+}
+
 void main()
 {
 	//Circle();
-	Circles();
+	//Circles();
+	SinGraph();
 }
