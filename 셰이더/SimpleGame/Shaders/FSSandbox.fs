@@ -67,7 +67,9 @@ void SinGraph()
 	{
 		FragColor = vec4((sinValue + 1)/2); //À½¿µ -> °ªÀ» »©ÁÖ¸é µÊ
 	}
-	else{
+	else
+	{
+		discard;
 		FragColor = vec4(0);
 	}
 }
