@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
+#include "LoadPng.h"
 
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
@@ -23,7 +24,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
     m_ParticleCloudShader = CompileShaders("./Shaders/ParticleCloud.vs", "./Shaders/ParticleCloud.fs");
     m_FSSandboxShader = CompileShaders("./Shaders/FSSandbox.vs", "./Shaders/FSSandbox.fs");
     m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs", "./Shaders/GridMesh.fs");
-
+    m_TextureSandboxShader = CompileShaders("./Shaders/TextureSandbox.vs", "./Shaders/TextureSandbox.fs");
 
 
     //Create VBOs
@@ -34,6 +35,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
     //Create Grid Mesh
     CreateGridMesh(32, 32);
 
+    //Create Texture
+    m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+
     if (m_SolidRectShader > 0 && m_VBORect > 0)
     {
         m_Initialized = true;
@@ -43,6 +47,35 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 bool Renderer::IsInitialized()
 {
     return m_Initialized;
+}
+
+GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
+
+{
+    //Load Png
+    std::vector<unsigned char> image;
+    unsigned width, height;
+    unsigned error = lodepng::decode(image, width, height, filePath);
+
+    if (error != 0)
+    {
+        std::cout << "PNG image loading failed:" << filePath << std::endl;
+
+    }
+    GLuint temp;
+    glGenTextures(1, &temp);
+    glBindTexture(GL_TEXTURE_2D, temp);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+        GL_UNSIGNED_BYTE, &image[0]);
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, samplingMethod);
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, samplingMethod);
+
+
+
+    return temp;
+
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -96,6 +129,21 @@ void Renderer::CreateVertexBufferObjects()
     glGenBuffers(1, &m_FSSandboxVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_FSSandboxVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(FSSandboxVerts), FSSandboxVerts, GL_STATIC_DRAW);
+
+    size = 0.5f;
+    float TextureSandboxVerts[] = {
+    -size, -size, 0, 0, 1,
+    size, size, 0, 1, 0,
+    -size, size, 0, 0, 0,
+    size, size, 0, 1, 0,
+    size, -size, 0, 1, 1,
+    -size, -size, 0, 0, 1 };
+
+
+    glGenBuffers(1, &m_TextureSandboxVBO);   //ID 생성
+    glBindBuffer(GL_ARRAY_BUFFER, m_TextureSandboxVBO);   //작업대로 올리기
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TextureSandboxVerts),
+        TextureSandboxVerts, GL_STATIC_DRAW); //업로드
 }
 
 
@@ -620,5 +668,37 @@ void Renderer::DrawGridMesh()
     glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
 
     glDisableVertexAttribArray(attribPosition);
+}
+
+void Renderer::DrawTextureSandbox()
+{
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //블렌딩 함수
+
+    //Program select
+    GLuint shader = m_TextureSandboxShader;
+    glUseProgram(shader);
+    GLuint stride = sizeof(float) * 5;
+
+    int ulTime = glGetUniformLocation(shader, "u_Time");
+    glUniform1f(ulTime, m_TextureSandboxShader);
+    m_TextureSandboxShader += 0.016; //정확하지 않음
+
+    int ulSampler = glGetUniformLocation(shader, "u_Texture");
+    glUniform1i(ulSampler, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+
+    int attribPosition = glGetAttribLocation(shader, "a_Position");
+    glEnableVertexAttribArray(attribPosition);
+    glBindBuffer(GL_ARRAY_BUFFER, m_TextureSandboxVBO);
+    glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, stride, 0);
+
+    int attribTexture = glGetAttribLocation(shader, "a_Texture");
+    glEnableVertexAttribArray(attribTexture);
+    glBindBuffer(GL_ARRAY_BUFFER, m_TextureSandboxVBO);
+    glVertexAttribPointer(attribTexture, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(sizeof(float)*3));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
