@@ -37,6 +37,18 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
     //Create Texture
     m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+    m_NumberTexture[0] = CreatePngTexture("./Textures/0.png", GL_NEAREST);
+    m_NumberTexture[1] = CreatePngTexture("./Textures/1.png", GL_NEAREST);
+    m_NumberTexture[2] = CreatePngTexture("./Textures/2.png", GL_NEAREST);
+    m_NumberTexture[3] = CreatePngTexture("./Textures/3.png", GL_NEAREST);
+    m_NumberTexture[4] = CreatePngTexture("./Textures/4.png", GL_NEAREST);
+    m_NumberTexture[5] = CreatePngTexture("./Textures/5.png", GL_NEAREST);
+    m_NumberTexture[6] = CreatePngTexture("./Textures/6.png", GL_NEAREST);
+    m_NumberTexture[7] = CreatePngTexture("./Textures/7.png", GL_NEAREST);
+    m_NumberTexture[8] = CreatePngTexture("./Textures/8.png", GL_NEAREST);
+    m_NumberTexture[9] = CreatePngTexture("./Textures/9.png", GL_NEAREST);
+    m_NumbersTexture = CreatePngTexture("./Textures/numbers.png", GL_NEAREST);
+
 
     if (m_SolidRectShader > 0 && m_VBORect > 0)
     {
@@ -681,13 +693,28 @@ void Renderer::DrawTextureSandbox()
     GLuint stride = sizeof(float) * 5;
 
     int ulTime = glGetUniformLocation(shader, "u_Time");
-    glUniform1f(ulTime, m_TextureSandboxShader);
-    m_TextureSandboxShader += 0.016; //정확하지 않음
+    glUniform1f(ulTime, m_TextureSandboxTime);
+    m_TextureSandboxTime += 0.016; //정확하지 않음
 
     int ulSampler = glGetUniformLocation(shader, "u_Texture");
-    glUniform1i(ulSampler, 0);
+    glUniform1i(ulSampler, 0); //0~11 넣으면 나옴
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+
+    int ulSampler1 = glGetUniformLocation(shader, "u_NumberTexture");
+    int textures[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    glUniform1iv(ulSampler1, 10, textures); //0~11 넣으면 나옴
+
+    int ulSampler2 = glGetUniformLocation(shader, "u_NumbersTexture");
+    glUniform1i(ulSampler2, 11); //0~11 넣으면 나옴
+
+    for (int i = 0; i < 10; i++) 
+    {
+        glActiveTexture(GL_TEXTURE1 + i);
+        glBindTexture(GL_TEXTURE_2D, m_NumberTexture[i]);
+    }
+    glActiveTexture(GL_TEXTURE11);
+    glBindTexture(GL_TEXTURE_2D, m_NumbersTexture);
 
     int attribPosition = glGetAttribLocation(shader, "a_Position");
     glEnableVertexAttribArray(attribPosition);
