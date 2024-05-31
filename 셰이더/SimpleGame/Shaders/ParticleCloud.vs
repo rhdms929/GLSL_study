@@ -191,6 +191,31 @@ void HeartShapeCycle()
    gl_Position = newPosition;
 }
 
+void Wave()
+{
+   vec4 newPosition = vec4(a_Position,1);
+   float t = u_Time-int(a_StartTime);
+
+   t =fract(t/10);
+
+   if(t>0){
+      float value = a_StartTime * 2.0 * C_PI;
+      float x = sin(value);
+      float y = cos(value);
+      newPosition.xy += vec2(x,y) * t;
+   }
+   else{
+      newPosition.x = 1000;
+   }
+
+   gl_Position=newPosition;
+
+   float dist = distance(vec2(0,0),newPosition.xy);
+   v_Color = vec4(dist,dist,dist,1);
+}
+
+
+
 void main()
 {
    //Line();
@@ -201,6 +226,6 @@ void main()
    //CircleShape();
    //CircleShapeCycle();
    //HeartShapeCycle();
-
+   Wave();
 } 
 

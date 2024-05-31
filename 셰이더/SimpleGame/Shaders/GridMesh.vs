@@ -41,7 +41,9 @@ void SphereMapping()
 	v_Color = vec4(1);
 }
 
+
 void main()
 {
-	SphereMapping();
+	Flag();
+	//SphereMapping();
 }

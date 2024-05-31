@@ -99,7 +99,28 @@ void P7()
 	FragColor = texture(u_NumbersTexture, newTexPos); 
 }
 
-void main()
+void test1() // ½ÃÇè¿¡ ³ª¿È !!!!!!!!!!
+{
+   float tx = v_TexPos.x;
+   float ty = (floor(v_TexPos.y * 3) * -2 + 2) / 3 + v_TexPos.y;
+   vec2 newTexPos = vec2(tx, ty);
+   FragColor = texture(u_Texture, newTexPos);
+}
+
+void test2() // ½ÃÇè¿¡ ³ª¿È !!!!!!!!!!
+{
+   float padding = 0.5;
+   float countX = 2;
+   float countY = 2;
+   vec2 newTexPos;
+   float tx = fract(v_TexPos.x*countX);
+   float ty = fract(padding*floor(v_TexPos.x*countX))+v_TexPos.y*countY;
+   newTexPos = vec2(tx, ty);
+
+   FragColor = texture(u_Texture, newTexPos);
+}
+
+void main() 
 {
 	//P1();
 	//P2();
@@ -107,6 +128,8 @@ void main()
 	//P4();
 	//P5();
 	//P6();
-	P7();
+	//P7();
+	//test1();
+	test2();
 }
 

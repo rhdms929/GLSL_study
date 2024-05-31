@@ -69,14 +69,15 @@ void SinGraph()
 	}
 	else
 	{
-		discard;
+		discard; 
 		FragColor = vec4(0);
 	}
 }
 
 void main()
 {
+	//FilledCircle();
 	//Circle();
-	//Circles();
-	SinGraph();
+	Circles();
+	//SinGraph();
 }
